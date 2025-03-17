@@ -6,7 +6,7 @@ function WatchedLists({ watched, onDeleteMovie }) {
     <ul className="list">
       {watched.map((movie) => (
         <WatchedList
-          key={movie.imdbID}
+          key={movie.id}
           movie={movie}
           onDeleteMovie={onDeleteMovie}
         />

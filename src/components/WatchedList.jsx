@@ -28,7 +28,7 @@ function WatchedList({ movie, onDeleteMovie }) {
 
 WatchedList.propTypes = {
   movie: PropTypes.shape({
-    imdbID: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
     Poster: PropTypes.string,
     Title: PropTypes.string.isRequired,
     Year: PropTypes.string.isRequired,

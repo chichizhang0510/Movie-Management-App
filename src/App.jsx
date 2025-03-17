@@ -23,7 +23,10 @@ const options = {
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(() => {
+    const savedWatched = localStorage.getItem("watched");
+    return savedWatched ? JSON.parse(savedWatched) : [];
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
@@ -44,6 +47,8 @@ export default function App() {
   function handleAddWatched(movie) {
     if (!watched.some((item) => item.id == movie.id)) {
       setWatched((prevWatched) => [...prevWatched, movie]);
+
+      localStorage.setItem("watched", JSON.stringify([...watched, movie]));
     }
     handleCloseMovie();
   }
