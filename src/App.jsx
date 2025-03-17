@@ -47,8 +47,6 @@ export default function App() {
   function handleAddWatched(movie) {
     if (!watched.some((item) => item.id == movie.id)) {
       setWatched((prevWatched) => [...prevWatched, movie]);
-
-      localStorage.setItem("watched", JSON.stringify([...watched, movie]));
     }
     handleCloseMovie();
   }
@@ -56,6 +54,10 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((prevWatched) => prevWatched.filter((item) => item.id != id));
   }
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   useEffect(() => {
     function callback(e) {
