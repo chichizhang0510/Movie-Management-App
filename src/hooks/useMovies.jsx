@@ -9,13 +9,14 @@ const options = {
   },
 };
 
-export function useMovies(query) {
+export function useMovies(query, callback) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(
     function () {
+      callback?.();
       if (!query.trim()) return;
 
       const controller = new AbortController();

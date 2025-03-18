@@ -1,6 +1,9 @@
+import "@/styles/App.css";
+
 import { useState, useEffect } from "react";
 import { useMovies } from "./hooks/useMovies";
-import "@/styles/App.css";
+import { useLocalStorageState } from "./hooks/useLocalStorageState";
+import { useKey } from "./hooks/useKey";
 
 import Navbar from "./components/Navbar";
 import Box from "./components/Box";
@@ -14,22 +17,22 @@ import Search from "./components/Search";
 import SelectedMovie from "./components/SelectedMovie";
 
 export default function App() {
-  const [watched, setWatched] = useState(() => {
-    const savedWatched = localStorage.getItem("watched");
-    return savedWatched ? JSON.parse(savedWatched) : [];
-  });
+  const [watched, setWatched] = useLocalStorageState([], "watched");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [debouncedQuery, setDebouncedQuery] = useState(query);
 
-  const { movies, isLoading, error } = useMovies(debouncedQuery);
+  const { movies, isLoading, error } = useMovies(
+    debouncedQuery,
+    handleCloseMovie
+  );
 
   function handleSelectedMovie(id) {
     setSelectedId(id);
   }
 
   function handleCloseMovie() {
-    console.log("Closing movie...");
+    // console.log("Closing movie...");
     setSelectedId(null);
     // console.log(selectedId);
   }
@@ -45,22 +48,19 @@ export default function App() {
     setWatched((prevWatched) => prevWatched.filter((item) => item.id != id));
   }
 
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched]);
+  useKey("Escape", handleCloseMovie);
+  // useEffect(() => {
+  //   function callback(e) {
+  //     if (e.code == "Escape") {
+  //       handleCloseMovie();
+  //     }
+  //   }
+  //   document.addEventListener("keydown", callback);
 
-  useEffect(() => {
-    function callback(e) {
-      if (e.code == "Escape") {
-        handleCloseMovie();
-      }
-    }
-    document.addEventListener("keydown", callback);
-
-    return () => {
-      document.removeEventListener("keydown", callback);
-    };
-  }, [selectedId]);
+  //   return () => {
+  //     document.removeEventListener("keydown", callback);
+  //   };
+  // }, [selectedId]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

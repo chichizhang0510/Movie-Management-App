@@ -1,21 +1,16 @@
 import PropTypes from "prop-types";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
+import { useKey } from "../hooks/useKey";
 
 function Search({ query, setQuery }) {
   const inputEl = useRef(null); // 创建了一个可变的对象 { current: null }，即 inputEl.current 一开始是 null。
 
-  useEffect(() => {
-    function callback(e) {
-      if (document.activeElement === inputEl.current) return;
-
-      if (e.code === "Enter") {
-        inputEl.current.focus();
-        setQuery("");
-      }
-    }
-    document.addEventListener("keydown", callback);
-    return () => document.removeEventListener("keydown", callback);
-  }, [setQuery]);
+  function handleFreshSearch() {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  }
+  useKey("Enter", handleFreshSearch);
 
   return (
     <input
